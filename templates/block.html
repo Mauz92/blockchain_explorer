@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="bg-gray-600 p-6 rounded shadow-md max-w-4xl mx-auto shadow-xl">
+    <h2 class="text-2xl font-semibold mb-4">Block #{{ block.block_number }}</h2>
+    <table class="table-auto w-full border-collapse border border-gray-800">
+        <tbody>
+            <tr>
+                <th class="border border-gray-800 px-4 py-2 text-left bg-gray-700">Timestamp</th>
+                <td class="border border-gray-800 px-4 py-2 bg-gray-700">{{ block.timestamp | datetime }}</td>
+            </tr>
+            <tr>
+                <th class="border border-gray-800 px-4 py-2 text-left bg-gray-700">Miner</th>
+                <td class="border border-gray-800 px-4 py-2 bg-gray-700">{{ block.miner }}</td>
+            </tr>
+            <tr>
+                <th class="border border-gray-800 px-4 py-2 text-left bg-gray-700">Size</th>
+                <td class="border border-gray-800 px-4 py-2 bg-gray-700">{{ block.size }} bytes</td>
+            </tr>
+            <tr>
+                <th class="border border-gray-800 px-4 py-2 text-left bg-gray-700">Gas Used</th>
+                <td class="border border-gray-800 px-4 py-2 bg-gray-700">{{ block.gas_used }}</td>
+            </tr>
+            <tr>
+                <th class="border border-gray-800 px-4 py-2 text-left bg-gray-700">Gas Limit</th>
+                <td class="border border-gray-800 px-4 py-2 bg-gray-700">{{ block.gas_limit }}</td>
+            </tr>
+            <tr>
+                <th class="border border-gray-800 px-4 py-2 text-left bg-gray-700">Transactions</th>
+                <td class="border border-gray-800 px-4 py-2 bg-gray-700">{{ block.transactions }}</td>
+            </tr>
+            <tr>
+                <th class="border border-gray-800 px-4 py-2 text-left bg-gray-700">Parent Hash</th>
+                <td class="border border-gray-800 px-4 py-2 bg-gray-700">{{ block.parent_hash }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {% endblock %}

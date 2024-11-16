@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Recent Blocks -->
+<section class="relative max-w-full mx-auto flex-grow flex flex-col rounded-xl shadow-xl overflow-hidden">
+    <div class="overflow-y-auto custom-scrollbar flex-grow">
+        <table id="block-table" class="table-auto w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="border-b text-xs text-gray-700 uppercase dark:text-gray-400 sticky-header">
+                <tr class="border-b dark:border-gray-700">
+                    <th scope="col" class="px-6 py-3 w-1/6">Block Number</th>
+                    <th scope="col" class="px-6 py-3 w-1/6">Timestamp</th>
+                    <th scope="col" class="px-6 py-3 w-1/6">Transactions</th>
+                    <th scope="col" class="px-6 py-3 w-1/6">Miner</th>
+                    <th scope="col" class="px-6 py-3 w-1/6">Base Fee Per Gas</th>
+                    <th scope="col" class="px-6 py-3 w-1/6">Gas Limit</th>
+                    <th scope="col" class="px-6 py-3 w-1/6">Gas Used</th>
+                    <th scope="col" class="px-6 py-3 w-1/6">Details</th>
+                </tr>
+            </thead>
+            <tbody id="recent-blocks">
+                <!-- Dynamic Rows will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+    <!-- Loading indicator -->
+    <div id="loading-indicator" class="text-center p-4 hidden">Loading...</div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}

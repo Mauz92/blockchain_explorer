@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Make the table container scrollable */
+        .custom-scrollbar {
+            overflow-y: auto;
+            /* Enables vertical scrolling */
+            border-radius: 1rem;
+            /* Keep rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Keep shadow */
+            flex-grow: 1;
+            /* Ensures it takes up available space */
+            min-height: 0;
+            /* Prevents content from breaking the layout */
+            height: calc(100vh - 32rem);
+        }
+        
+        /* Sticky table headers */
+        .sticky-header th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            /* Ensures headers stay on top when scrolling */
+            background-color: rgb(10, 10, 10);
+            /* Ensure header background stays white */
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 1);
+            /* Optional shadow to distinguish header */
+        }
+
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 10px;
+            /* Set width of the scrollbar */
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(46, 46, 46, 0.5);
+            /* Scrollbar thumb color */
+            border-radius: 5px;
+            /* Rounded edges for the thumb */
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(50,50,50,0.5);
+            /* Thumb color on hover */
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background-color: rgba(196, 196, 196, 0.1);
+            /* Scroll track color */
+            border-radius: 5px;
+            /* Rounded track edges */
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen bg-gray-900 text-gray-100">
+    <!-- Background Effect -->
+    <div
+        class="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]">
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="relative flex flex-col items-center text-center w-full pt-20 flex-grow">
+        <!-- Page Header -->
+        <header
+            class="flex items-center justify-between px-4 w-full h-24 absolute top-0 py-8 bg-neutral-950 p-4 w-full z-10 shadow-xl shadow-">
+            <!-- Top Bar with Search Functions -->
+            <div class="flex justify-between items-center max-w-7xl mx-auto w-full">
+                <a href="/"><img src="{{ url_for('static', filename='logo.png') }}" class="h-16 w-auto"></a>
+
+                <!-- Search Form -->
+                <div class="ml-auto flex space-x-6">
+                    <!-- Block Search -->
+                    <div class="relative inline-flex group">
+                        <div
+                            class="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt">
+                        </div>
+                        <div class="relative flex space-x-2">
+                            <input type="text" id="block" placeholder="Enter Block # or Hash"
+                                class="p-2 w-56 h-8 text-xs rounded-lg text-neutral-800 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                            <button onclick="fetchBlock()"
+                                class="h-8 text-xs bg-neutral-900 text-white px-4 py-2 rounded-lg hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                Search Block
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Transaction Search -->
+                    <div class="relative inline-flex group">
+                        <div
+                            class="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt">
+                        </div>
+                        <div class="relative flex space-x-2">
+                            <input type="text" id="tx" placeholder="Enter Transaction Hash"
+                                class="p-2 w-56 h-8 text-xs rounded-lg text-neutral-800 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                            <button onclick="fetchTransaction()"
+                                class="h-8 text-xs bg-neutral-900 text-white px-4 py-2 rounded-lg hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                Search Transaction
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Section -->
+        <main class="w-full flex-grow flex flex-col overflow-hidden mt-8">
+            {% block content %}{% endblock %}
+        </main>
+
+        {% block scripts %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 bg-opacity-20 opacity-50 text-white py-12 z-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Logo Section -->
+                <div class="flex flex-col items-start">
+                    <img src="{{ url_for('static', filename='logo.png') }}" class="h-12 w-auto mb-4">
+                    <p class="text-sm text-gray-400">© 2024 Your Company. All Rights Reserved.</p>
+                </div>
+
+                <!-- Links Section -->
+                <div class="flex flex-col space-y-4">
+                    <h3 class="text-lg font-semibold">Quick Links</h3>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-indigo-600">Home</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">About</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Services</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Media Section -->
+                <div class="flex flex-col space-y-4">
+                    <h3 class="text-lg font-semibold">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-indigo-600">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-indigo-600">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-indigo-600">
+                            <i class="fab fa-linkedin-in text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-indigo-600">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="mt-12 text-center">
+                <h3 class="text-lg font-semibold">Contact Us</h3>
+                <p class="text-sm text-gray-400">Email: <a href="mailto:support@yourcompany.com"
+                        class="hover:text-indigo-600">support@yourcompany.com</a></p>
+            </div>
+        </div>
+    </footer>
+</body>
